@@ -1,0 +1,111 @@
+# docker-compose.yml — Orchestration des services Stock&Shop
+#
+# Ce fichier définit 3 conteneurs Docker qui forment l'environnement de développement :
+#   - backend  : application Symfony (PHP 8.2-FPM)
+#   - frontend : application React (Node 18 Alpine)
+#   - database : base de données MySQL 8.0
+#
+# Utilisation :
+#   docker-compose up -d       → démarrer tous les services en arrière-plan
+#   docker-compose down        → arrêter et supprimer les conteneurs
+#   docker-compose logs -f     → suivre les logs en temps réel
+
+version: '3.9'
+
+services:
+
+  # ─────────────────────────────────────────────────────────
+  # SERVICE BACKEND — Symfony PHP
+  # ─────────────────────────────────────────────────────────
+  backend:
+    # Image officielle PHP 8.2 avec FPM (FastCGI Process Manager)
+    # FPM gère les processus PHP et est recommandé pour les apps Symfony en production
+    image: php:8.2-fpm
+
+    # Port exposé : 8000 sur l'hôte → 8000 dans le conteneur
+    ports:
+      - "8000:8000"
+
+    # Volume : synchronise le code source local avec le dossier web du conteneur
+    # Chaque modification locale est immédiatement reflétée dans le conteneur
+    volumes:
+      - ./backend:/var/www/html
+
+    # Le backend dépend de la base de données : il ne démarrera qu'après "database"
+    depends_on:
+      - database
+
+    # Réseau partagé pour la communication inter-services
+    networks:
+      - stockshop_network
+
+    # Variables d'environnement injectées dans le conteneur backend
+    environment:
+      - APP_ENV=dev
+
+  # ─────────────────────────────────────────────────────────
+  # SERVICE FRONTEND — React / Vite
+  # ─────────────────────────────────────────────────────────
+  frontend:
+    # Node 18 Alpine : image légère (basée sur Alpine Linux) suffisante pour un serveur Vite
+    image: node:18-alpine
+
+    # Port exposé : 3000 sur l'hôte → 3000 dans le conteneur (port par défaut de Vite)
+    ports:
+      - "3000:3000"
+
+    # Volume : synchronise le code React local avec /app dans le conteneur
+    volumes:
+      - ./frontend:/app
+
+    # Répertoire de travail par défaut à l'intérieur du conteneur
+    working_dir: /app
+
+    # Commande de démarrage : installe les dépendances puis lance Vite en mode dev
+    # --host 0.0.0.0 est nécessaire pour que Vite soit accessible depuis l'hôte
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+    networks:
+      - stockshop_network
+
+  # ─────────────────────────────────────────────────────────
+  # SERVICE DATABASE — MySQL 8.0
+  # ─────────────────────────────────────────────────────────
+  database:
+    # MySQL 8.0 : version spécifiée dans DATABASE_URL du backend Symfony
+    image: mysql:8.0
+
+    # Port exposé : 3306 sur l'hôte → 3306 dans le conteneur
+    # Permet de se connecter depuis un client SQL local (ex: DBeaver, TablePlus)
+    ports:
+      - "3306:3306"
+
+    # Variables d'environnement MySQL : créent automatiquement la base et l'utilisateur
+    environment:
+      MYSQL_DATABASE: stockshop_db        # Nom de la base de données
+      MYSQL_USER: stockshop               # Utilisateur applicatif (utilisé par Symfony)
+      MYSQL_PASSWORD: password            # Mot de passe de l'utilisateur applicatif
+      MYSQL_ROOT_PASSWORD: rootpassword   # Mot de passe du super-utilisateur root
+
+    # Volume nommé pour persister les données MySQL entre les redémarrages de conteneur
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    networks:
+      - stockshop_network
+
+# ─────────────────────────────────────────────────────────
+# VOLUMES NOMMÉS
+# ─────────────────────────────────────────────────────────
+volumes:
+  # Volume géré par Docker pour la persistance des données MySQL
+  mysql_data:
+
+# ─────────────────────────────────────────────────────────
+# RÉSEAUX
+# ─────────────────────────────────────────────────────────
+networks:
+  # Réseau bridge personnalisé permettant aux services de communiquer par nom
+  # (ex: le backend peut joindre "database" via son hostname "database")
+  stockshop_network:
+    driver: bridge

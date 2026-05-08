@@ -1,0 +1,30 @@
+# ─────────────────────────────────────────────
+# .gitignore — Stock&Shop
+# Fichiers et dossiers exclus du suivi Git
+# ─────────────────────────────────────────────
+
+# Dépendances PHP (Composer)
+vendor/
+
+# Dépendances JavaScript (npm / yarn)
+node_modules/
+
+# Variables d'environnement locales (contiennent des secrets — ne jamais committer)
+.env.local
+
+# Fichiers générés par Symfony (cache, logs, sessions)
+var/
+
+# Dossiers de build frontend (artefacts de production)
+dist/
+build/
+
+# Fichiers système macOS
+.DS_Store
+
+# Configuration interne Claude Code (outil de développement IA)
+.claude/
+
+# Fichiers de prompts Claude Code (documentation interne au projet)
+StockShop_Prompts_ClaudeCode.md
+*_Prompts_ClaudeCode.md
