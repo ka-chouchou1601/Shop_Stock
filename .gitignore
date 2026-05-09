@@ -9,8 +9,9 @@ vendor/
 # Dépendances JavaScript (npm / yarn)
 node_modules/
 
-# Variables d'environnement locales (contiennent des secrets — ne jamais committer)
+# Variables d'environnement (contiennent des secrets — ne jamais committer)
 .env.local
+backend/.env
 
 # Fichiers générés par Symfony (cache, logs, sessions)
 var/
