@@ -5,7 +5,12 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # Chargement des utilisateurs depuis la base de données via l'entité User
+        # property: email → Symfony utilisera l'email comme identifiant de recherche
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
 
     firewalls:
         dev:
@@ -14,7 +19,10 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+            # stateless: true → l'API REST ne crée pas de session PHP
+            # Le frontend gère l'état de connexion côté client (localStorage / contexte React)
+            stateless: true
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
