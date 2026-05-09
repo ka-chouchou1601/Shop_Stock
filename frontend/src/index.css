@@ -1,0 +1,4 @@
+/* Directives Tailwind CSS — génèrent les classes utilitaires au build */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

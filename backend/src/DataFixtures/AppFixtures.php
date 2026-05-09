@@ -64,7 +64,7 @@ class AppFixtures extends Fixture
         // 3. PRODUITS
         // ─────────────────────────────────────────────────────────
 
-        // Définition des produits : [nom, catégorie, description courte, description, prix, quantité]
+        // Définition des produits : [nom, catégorie, description courte, description, prix, quantité, imageUrl]
         $productsData = [
             [
                 'name'             => 'Kit découverte',
@@ -73,6 +73,7 @@ class AppFixtures extends Fixture
                 'description'      => 'Kit tout-en-un idéal pour les débutants. Inclut un mod, un clearomiseur et un chargeur USB.',
                 'price'            => '29.90',
                 'quantity'         => 12,  // quantity > 5 → "En stock"
+                'imageUrl'         => 'https://images.unsplash.com/photo-1625895197185-efcec01cffe0?w=400',
             ],
             [
                 'name'             => 'Chargeur USB-C',
@@ -81,6 +82,7 @@ class AppFixtures extends Fixture
                 'description'      => 'Chargeur universel USB-C compatible avec la plupart des mods du marché. Charge rapide 2A.',
                 'price'            => '12.90',
                 'quantity'         => 4,   // 1 ≤ quantity ≤ 5 → "Stock faible"
+                'imageUrl'         => 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400',
             ],
             [
                 'name'             => 'Résistance 0.8 ohm',
@@ -89,6 +91,7 @@ class AppFixtures extends Fixture
                 'description'      => 'Résistances mesh de remplacement 0.8 ohm. Compatible avec les clearomiseurs standard. Vendu par pack de 5.',
                 'price'            => '3.90',
                 'quantity'         => 0,   // quantity = 0 → "Rupture"
+                'imageUrl'         => 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400',
             ],
             [
                 'name'             => 'Pochette de rangement',
@@ -97,6 +100,7 @@ class AppFixtures extends Fixture
                 'description'      => 'Pochette de rangement zippée pour transporter votre matériel en toute sécurité. Compartiments dédiés.',
                 'price'            => '8.50',
                 'quantity'         => 25,  // quantity > 5 → "En stock"
+                'imageUrl'         => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400',
             ],
             [
                 'name'             => 'Produit test e-liquide sans nicotine',
@@ -105,6 +109,7 @@ class AppFixtures extends Fixture
                 'description'      => 'E-liquide de test sans nicotine, base 50/50 PG/VG. Arôme neutre. Flacon de 50ml.',
                 'price'            => '5.90',
                 'quantity'         => 7,   // quantity > 5 → "En stock"
+                'imageUrl'         => 'https://images.unsplash.com/photo-1571506165871-ee72a35bc9d4?w=400',
             ],
         ];
 
@@ -116,6 +121,7 @@ class AppFixtures extends Fixture
             $product->setPrice($data['price']);
             $product->setQuantity($data['quantity']);
             $product->setCategory($categories[$data['category']]);
+            $product->setImageUrl($data['imageUrl']);
             $manager->persist($product);
         }
 

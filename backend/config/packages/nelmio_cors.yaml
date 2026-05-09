@@ -7,8 +7,8 @@ nelmio_cors:
         # origin_regex: false → les origines sont comparées en chaîne exacte, pas en regex
         origin_regex: false
 
-        # Origines autorisées : le serveur de dev React (Vite sur 3000 ou 3001)
-        allow_origin: ['http://localhost:3000', 'http://localhost:3001']
+        # Origines autorisées : le serveur de dev React/Vite (3000, 3001 ou 5173)
+        allow_origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173']
 
         # Méthodes HTTP acceptées pour les requêtes cross-origin
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
